@@ -158,9 +158,11 @@ exports.randomplay = (req, res, next) => {
 
     req.session.randomPlay = req.session.randomPlay || [];
     req.session.score =  req.session.score || 0;
-    const a = req.session.randomPlay;
     const score = req.session.score   
-    models.quiz.findOne({where: {id: {[Sequelize.Op.notIn] : a }} ,order: [Sequelize.fn('RANDOM')] })
+    models.quiz.findOne({
+        where: {id: {[Sequelize.Op.notIn] : req.session.randomPlay }},
+        order: [Sequelize.fn('RANDOM')] 
+    })
     .then(quiz => {
         if (quiz){
             req.session.randomPlay.push(quiz.id); 
